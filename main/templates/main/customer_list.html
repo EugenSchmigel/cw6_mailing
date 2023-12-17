@@ -1,29 +1,25 @@
 {% extends 'main/base.html' %}
 {% block content %}
   <div class="col-12 mb-5">
-    <a class="btn btn-outline-primary" href=" ">Add Blog</a>
+    <a class="btn btn-outline-primary" href="{% url 'main:create_customer' %}">Add Customer</a>
   </div>
   {% for object in object_list reversed %}
   <div class="col-md-12">
     <div class="card mb-4 box-shadow">
       <div class="card-body">
         <h4 class="card-text">
-          Fullname:
-          {{ object.pk }} - {{ object.fio }}
+          {{ object.pk }} -
+          Fullname: {{ object.fio }}
         </h4>
         <p class="card-text">
           Email: {{ object.email}} <br>
           Comment: {{ object.comment}}  <br>
           Created on: {{ object.create_date}}
         </p>
-        <div class="d-flex justify-content-between align-items-center">
+        <div class="d-flex justify-content-between align-items-center float-right">
             <div class="btn-group">
-              <a href="#"
+              <a href="{% url 'main:customer_view' object.pk %}"
                 class="btn btn-sm btn-outline-secondary">View</a>
-              <a href="#"
-                class="btn btn-sm btn-outline-secondary">Edit</a>
-              <a href="#"
-                class="btn btn-sm btn-outline-danger">Delete  </a>
           </div>
         </div>
       </div>

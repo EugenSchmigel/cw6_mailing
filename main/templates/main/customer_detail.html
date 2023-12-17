@@ -4,6 +4,11 @@
 <div class="col-12">
     <div class="row">
         <div class="col-9">
+            <span class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'main:customer_list'%}"
+                   class="btn btn-outline-primary">To Customer List
+                </a>
+            </span>
             <div class="card">
                 <div class="card-header">
                     <h3>
@@ -14,22 +19,18 @@
                 <div class="card-body">
                     <p>Comment:
                         {{ object.comment }}
-
                         <br>
-
                     </p>
-
                     <div class="d-flex justify-content-between align-items-center float-right">
                         <div class="btn-group">
-                          <a href="#"
-                            class="btn btn-sm btn-outline-secondary">Blog List</a>
-                          <a href="#"
+                          <a href="{% url 'main:edit_customer' object.pk %}"
                             class="btn btn-sm btn-outline-secondary">Edit</a>
+                          <a href="{% url 'main:delete_customer' object.pk %}"
+                            class="btn btn-sm btn-outline-danger">Delete</a>
                         </div>
                     </div>
                 </div>
                 <div class="card-footer">
-                    Views:
                 </div>
             </div>
         </div>

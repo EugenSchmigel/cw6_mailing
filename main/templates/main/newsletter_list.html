@@ -1,7 +1,7 @@
 {% extends 'main/base.html' %}
 {% block content %}
   <div class="col-12 mb-5">
-    <a class="btn btn-outline-primary" href=" ">Add Newsletter</a>
+    <a class="btn btn-outline-primary" href="{% url 'main:create_newsletter' %}">Add Newsletter</a>
   </div>
   {% for object in object_list reversed %}
   <div class="col-md-12">
@@ -35,7 +35,7 @@
                 </tr>
                 {% for message_item in object.message.all %}
                     <tr>
-                            <td> <a href="{% url 'main:message_view' message_item.pk %}"> {{ message_item.pk }} </a> </td>
+                        <td> <a href="{% url 'main:message_view' message_item.pk %}"> {{ message_item.pk }} </a> </td>
                         <td> {{ message_item.message_subject }} </td>
                     </tr>
                 {% endfor %}
