@@ -1,0 +1,17 @@
+
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>Frequency</th>
+        <th>Status</th>
+        <th>Create Date</th>
+    </tr>
+    {% for object in object_list %}
+        <tr>
+            <td> <a href="{% url 'main:newsletter_view' object.pk %}"> {{ object.pk }} </a> </td>
+            <td> {{ object.interval }} </td>
+            <td> {{ object.status }} </td>
+            <td> {{ object.create_date }} </td>
+        </tr>
+    {% endfor %}
+</table>

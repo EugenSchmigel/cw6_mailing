@@ -1,0 +1,33 @@
+{% extends 'main/base.html' %}
+{% block content %}
+  <div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href=" ">Add Blog</a>
+  </div>
+  {% for object in object_list %}
+  <div class="col-md-12">
+    <div class="card mb-4 box-shadow">
+      <div class="card-body">
+        <h4 class="card-text">
+          {{ object.pk }} - {{ object.message_subject }}  <br>
+
+        </h4>
+        <p class="card-text">
+          Message: {{ object.message_body }}  <br>
+          Created on: {{ object.create_date }}
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <a href="#"
+                class="btn btn-sm btn-outline-secondary">View</a>
+              <a href="#"
+                class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="#"
+                class="btn btn-sm btn-outline-danger">Delete  </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  {% endblock%}

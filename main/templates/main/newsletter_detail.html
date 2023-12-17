@@ -1,0 +1,47 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="col-12">
+    <div class="row">
+        <div class="col-9">
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        Blog "{{ object.status }}"
+                    </h3>
+                    <h4>Slug: {{ object.interval }}</h4>
+                </div>
+                <div class="card-body">
+                    <p>Customer:
+                        {% for customer_item in object.customer.all %}
+                            <ul>
+                                <li> {{ customer_item.fio }}</li>
+                            </ul>
+                        {% endfor %}
+                        <br>
+                        Message:
+                        {% for message_item in object.message.all %}
+                            <ul>
+                              <li>{{ message_item.pk }} - {{ message_item.message_subject }}</li>
+                            </ul>
+                        {% endfor %}
+
+                    </p>
+
+                    <div class="d-flex justify-content-between align-items-center float-right">
+                        <div class="btn-group">
+                          <a href="#"
+                            class="btn btn-sm btn-outline-secondary">Blog List</a>
+                          <a href="#"
+                            class="btn btn-sm btn-outline-secondary">Edit</a>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    Views:
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
