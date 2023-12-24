@@ -11,7 +11,7 @@ class Customer(models.Model):
     email = models.EmailField(verbose_name='контактный email')
     comment = models.TextField(**NULLABLE, verbose_name='комментарий')
     create_date = models.DateTimeField(**NULLABLE, auto_now_add=True, verbose_name='дата создания')
-    # owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='владелец', **NULLABLE)
+    owner = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='владелец', **NULLABLE)
 
 
     def __str__(self):
@@ -42,7 +42,7 @@ class Newsletter(models.Model):
     status = models.CharField(max_length=20, choices=STATUS, verbose_name='статус рассылки')
     message_subject = models.CharField(max_length=100, verbose_name='тема письма')
     message_body = models.TextField(verbose_name='тело письма', **NULLABLE)
-    # owner = models.ForeignKey(User, on_delete=models.CASCADE, verbose_name='владелец', **NULLABLE)
+    owner = models.ForeignKey('users.User', on_delete=models.CASCADE, verbose_name='владелец', **NULLABLE)
     start_time = models.DateField(**NULLABLE, verbose_name='начало рассылки')
     end_time = models.DateField(**NULLABLE, verbose_name='конец рассылки')
     last_run = models.DateField(verbose_name='дата последней отправки рассылки', **NULLABLE)
@@ -53,7 +53,6 @@ class Newsletter(models.Model):
     class Meta:
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
-
 
 
 class NewsletterLog(models.Model):

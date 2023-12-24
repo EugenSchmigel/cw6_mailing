@@ -1,8 +1,9 @@
 from django.urls import path
 
-from main.views import IndexView, CustomerListView, NewsletterListView, NewsletterDetailView, CustomerDetailView, \
- CustomerUpdateView, CustomerDeleteView, \
-    NewsletterUpdateView, NewsletterDeleteView, CustomerCreateView, NewsletterCreateView
+from main.models import NewsletterLog
+from main.views import HomePageView, CustomerListView, NewsletterListView, NewsletterDetailView, CustomerDetailView, \
+    CustomerUpdateView, CustomerDeleteView, \
+    NewsletterUpdateView, NewsletterDeleteView, CustomerCreateView, HomePageView, NewsletterCreateView
 
 from main.apps import MainConfig
 
@@ -11,7 +12,7 @@ app_name = MainConfig.name
 
 urlpatterns = [
 
-    path('', IndexView.as_view(), name='index'),
+    path('', HomePageView.as_view(), name='home'),
 
     path('customer/create/', CustomerCreateView.as_view(), name='create_customer'),
     path('customer/', CustomerListView.as_view(), name='customer_list'),
@@ -25,5 +26,5 @@ urlpatterns = [
     path('newsletter/edit/<int:pk>/', NewsletterUpdateView.as_view(), name='edit_newsletter'),
     path('newsletter/delete/<int:pk>/', NewsletterDeleteView.as_view(), name='delete_newsletter'),
 
-    # path('logs/', LogsListView.as_view(), name='logs_list'),
+    #path('logs/', NewsletterLog.as_view(), name='logs_list'),
 ]

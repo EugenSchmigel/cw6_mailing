@@ -11,6 +11,6 @@ class CustomerAdmin(admin.ModelAdmin):
 
 @admin.register(Newsletter)
 class NewsletterAdmin(admin.ModelAdmin):
-    list_display = ('id', 'create_date', 'interval', 'status',)
+    list_display = ('create_date', 'interval', 'status',)
     list_filter = ('status',)
     search_fields = ('status', 'customer',)
