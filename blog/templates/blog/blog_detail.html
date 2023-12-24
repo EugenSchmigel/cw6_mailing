@@ -1,29 +1,27 @@
-{% extends 'main/base.html' %}
+{% extends 'catalog/base.html' %}
 
 {% block content %}
 <div class="col-12">
     <div class="row">
         <div class="col-9">
-            <span class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="{% url 'main:message_list'%}"
-                   class="btn btn-outline-primary">To Message List
-                </a>
-            </span>
             <div class="card">
                 <div class="card-header">
                     <h3>
-                        {{ object.pk }} - {{ object.message_subject }}
+                        Blog "{{ object.title }}"
                     </h3>
+                    <h4>Slug: {{ object.slug }}</h4>
                 </div>
                 <div class="card-body">
-                    Message: {{ object.message_body }}
+                    <p>
+                        {{ object.content }}
                     </p>
+
                     <div class="d-flex justify-content-between align-items-center float-right">
                         <div class="btn-group">
-                          <a href="{% url 'main:edit_message' object.pk %}"
+                          <a href="{% url 'blog:blog_list' %}"
+                            class="btn btn-sm btn-outline-secondary">Blog List</a>
+                          <a href="{% url 'blog:edit_blog' object.pk %}"
                             class="btn btn-sm btn-outline-secondary">Edit</a>
-                          <a href="{% url 'main:delete_message' object.pk %}"
-                            class="btn btn-sm btn-outline-danger">Delete</a>
                         </div>
                     </div>
                 </div>

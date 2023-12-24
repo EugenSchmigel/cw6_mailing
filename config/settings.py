@@ -9,7 +9,7 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
+import os
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -39,6 +39,8 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
 
     'main',
+    'blog',
+    'users',
 ]
 
 MIDDLEWARE = [
@@ -133,3 +135,34 @@ MEDIA_ROOT = BASE_DIR / 'media'
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+AUTH_USER_MODEL = 'users.User'
+
+
+LOGIN_REDIRECT_URL = '/'
+LOGOUT_REDIRECT_URL = '/'
+LOGIN_URL = '/users/'
+
+EMAIL_HOST = 'server28.webgo24.de'
+EMAIL_PORT = 465
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')
+EMAIL_USE_SSL = True
+
+
+# CRONJOBS = [
+#     ('* * * * *', 'mailing.services.time_task'),  # Ежеминутная
+#     ('0 10 * * *', 'mailing.services.time_task', ['daily']),  # Ежедневная
+#     ('0 10 * * 1', 'mailing.services.time_task', ['weekly']),  # Еженедельная
+#     ('0 10 1 * *', 'mailing.services.time_task', ['monthly']),  # Ежемесячная
+# ]
+
+# CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
+#
+# if CACHE_ENABLED:
+#     CACHES = {
+#         "default": {
+#             "BACKEND": "django.core.cache.backends.redis.RedisCache",
+#             "LOCATION": os.getenv('CACHES_LOCATION'),
+#         }
+#     }

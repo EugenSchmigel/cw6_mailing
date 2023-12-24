@@ -1,0 +1,31 @@
+{% extends 'catalog/base.html' %}
+{% block content %}
+  <div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'blog:create_blog' %}">Add Blog</a>
+  </div>
+  {% for object in object_list reversed %}
+  <div class="col-md-12">
+    <div class="card mb-4 box-shadow">
+      <div class="card-body">
+        <h4 class="card-text">
+          {{ object.pk }} - {{ object.title }}
+        </h4>
+        <p class="card-text">
+          {{ object.content}}
+        </p>
+        <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <a href="{% url 'blog:view' object.pk %}"
+                class="btn btn-sm btn-outline-secondary">View</a>
+              <a href="{% url 'blog:edit_blog' object.pk %}"
+                class="btn btn-sm btn-outline-secondary">Edit</a>
+              <a href="{% url 'blog:delete_blog' object.pk %}"
+                class="btn btn-sm btn-outline-danger">Delete  </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  {% endblock%}

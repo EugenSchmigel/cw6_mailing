@@ -1,0 +1,23 @@
+{% extends 'main/base.html' %}
+
+{% block content %}
+<div class="container">
+    <div class="col-12">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <p>Delete the Profile?</p>
+                            <button type="submit" class="w-100 btn btn-sm btn-outline-danger">Confirm</button>
+                            <a href="{% url 'mailing:home' %}" class="w-100 btn btn-sm btn-outline-success">Back</a>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
