@@ -1,9 +1,13 @@
+from django.contrib.auth.decorators import permission_required
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import Http404
-from django.urls import reverse, reverse_lazy
-from django.views.generic import TemplateView, ListView, DetailView, UpdateView, DeleteView, CreateView
+from django.shortcuts import render, redirect
+from django.urls import reverse_lazy, reverse
+from django.views.generic import CreateView, ListView, DetailView, DeleteView, UpdateView, TemplateView
 
+from blog.models import Blog
 from main.form import CustomerForm, NewsletterForm
-from main.models import Newsletter, Customer
+from main.models import Customer, Newsletter, NewsletterLog
 from main.services import time_task
 
 
@@ -15,96 +19,62 @@ class ChecksUser:
         return self.object
 
 
-class IndexView(TemplateView):
-    template_name = 'main/index.html'
-    extra_context = {
-        'title': 'Mailing Management'
-    }
-
-    def get_context_data(self, **kwargs):
-        context_data = super().get_context_data(**kwargs)
-        context_data['object_list'] = Newsletter.objects.all()
-
-        return context_data
-
-
-class CustomerCreateView(CreateView):
+class CustomerCreateView(LoginRequiredMixin, CreateView):
     model = Customer
     form_class = CustomerForm
     template_name = 'main/customer_form.html'
-    extra_context = {'title': 'Create Customer'}
-
     success_url = reverse_lazy('main:customer_list')
 
     def form_valid(self, form):
         if form.is_valid:
-            new_client = form.save()
-            new_client.owner = self.request.user
-            new_client.save()
+            new_customer = form.save()
+            new_customer.owner = self.request.user
+            new_customer.save()
 
         return super().form_valid(form)
 
 
-class CustomerListView(ListView):
+class CustomerListView(ChecksUser, ListView):
     model = Customer
-    extra_context = {'title': 'Customer List'}
     template_name = 'main/customer_list.html'
 
     def get_queryset(self):
-        client = super().get_queryset()
-        return client.filter(owner=self.request.user)
+        customer = super().get_queryset()
+        return customer.filter(owner=self.request.user)
 
 
-class CustomerDetailView(DetailView):
+class CustomerDetailView(LoginRequiredMixin, DetailView):
     model = Customer
-    extra_context = {'title': 'Customer Details'}
-    template_name = 'main/customer_detail.html'
+    template_name = 'newsletter/customer_detail.html'
 
     def test_func(self):
         objects = self.get_object()
         return self.request.user == objects.owner or self.request.user.is_superuser
 
 
-class CustomerUpdateView(UpdateView):
+class CustomerDeleteView(LoginRequiredMixin, ChecksUser, DeleteView):
     model = Customer
-    form_class = CustomerForm
-    extra_context = {'title': 'Update Customer'}
-
-    def get_success_url(self):
-        return reverse('main:customer_view', args=[self.kwargs.get('pk')])
-
-
-class CustomerDeleteView(DeleteView):
-    model = Customer
-    extra_context = {'title': 'Delete Customer'}
+    template_name = 'main/customer_confirm_delete.html'
     success_url = reverse_lazy('main:customer_list')
 
 
-class NewsletterListView(ListView):
-    model = Newsletter
-    extra_context = {'title': 'Newsletter List'}
-    template_name = 'main/newsletter_list.html'
-
-    def get_queryset(self):
-        if self.request.user.has_perm('mailing.deactivate_mailing') or self.request.user.is_superuser:
-            mailing = super().get_queryset()
-            return mailing
-        else:
-            mailing = super().get_queryset()
-            return mailing.filter(owner=self.request.user)
+class CustomerUpdateView(LoginRequiredMixin, ChecksUser, UpdateView):
+    model = Customer
+    form_class = CustomerForm
+    success_url = reverse_lazy('main:customer_list')
 
 
-class NewsletterCreateView(CreateView):
-    model = Newsletter
-    form_class = NewsletterForm
-    extra_context = {'title': 'Create Newsletter'}
+class NewsletterCreateView(LoginRequiredMixin, CreateView):
+    model = Customer
+    form_class = Customer
+    template_name = 'main/newsletter_form.html'
     success_url = reverse_lazy('main:newsletter_list')
 
     def form_valid(self, form):
         if form.is_valid():
-            new_client = form.save()
-            new_client.owner = self.request.user
-            new_client.save()
+            new_customer= form.save()
+            new_customer.owner = self.request.user
+            new_customer.save()
         return super().form_valid(form)
 
     def get_queryset(self):
@@ -116,32 +86,75 @@ class NewsletterCreateView(CreateView):
         return user_request
 
 
+class NewsletterListView(ListView):
+    model = Newsletter
+    template_name = 'main/news_list.html'
+
+    def get_queryset(self):
+        if self.request.user.has_perm('main.deactivate_newsletter') or self.request.user.is_superuser:
+            newsletter = super().get_queryset()
+            return newsletter
+        else:
+            newsletter = super().get_queryset()
+            return newsletter.filter(owner=self.request.user)
+
+
 class NewsletterDetailView(DetailView):
     model = Newsletter
-    extra_context = {'title': 'Newsletter Details'}
     template_name = 'main/newsletter_detail.html'
 
 
-class NewsletterUpdateView(UpdateView):
+class NewsletterDeleteView(LoginRequiredMixin, ChecksUser, DeleteView):
+    model = Newsletter
+    template_name = 'main/newsletter_confirm_delete.html'
+    success_url = reverse_lazy('main:newsletter_list')
+
+
+class NewsletterUpdateView(LoginRequiredMixin, ChecksUser, UpdateView):
     model = Newsletter
     form_class = NewsletterForm
-
-    extra_context = {'title': 'Update Newsletter'}
+    success_url = reverse_lazy('main:newsletter_list')
 
     def get_form_kwargs(self):
         user_request = super().get_form_kwargs()
         user_request['user'] = self.request.user
         return user_request
-    def get_success_url(self):
-        return reverse('main:newsletter_view', args=[self.kwargs.get('pk')])
 
 
-class NewsletterDeleteView(DeleteView):
-    model = Newsletter
-    extra_context = {'title': 'Delete Newsletter'}
-    success_url = reverse_lazy('main:newsletter_list')
+class NewsletterLogListView(ListView):
+    model = NewsletterLog
+    template_name = 'main/newsletter_report.html'
 
 
+def contacts(request):
+    return render(request, 'main/contacts.html')
 
 
+class HomePageView(TemplateView):
+    template_name = 'main/home.html'
 
+    def get_context_data(self, **kwargs):
+        blog = Blog.objects.all()[:3]  # выборка из базы данных 3 случайных записи Blog
+        customers_count = len(Customer.objects.all())  # подсчёт кол-во клиентов
+        newsletter_count = len(Newsletter.objects.all())  # подсчёт кол-во рассылок
+        newsletter_active = len(Newsletter.objects.filter(status='started'))  # подсчёт кол-во активных рассылок
+        context = super().get_context_data()
+        context['newsletter_count'] = newsletter_count
+        context['newsletter_active'] = newsletter_active
+        context['customers_count'] = customers_count
+        context['blogs'] = blog
+
+        return context
+
+
+@permission_required('newsletter.deactivate_newsletter')
+def off(request, pk):
+    """Контролер для отключения рассылок"""
+
+    obj = Newsletter.objects.get(pk=pk)
+
+    if obj.status == 'created' or 'started':
+        obj.status = 'done'
+        obj.save()
+
+    return redirect(reverse('main:newsletter_list'))
