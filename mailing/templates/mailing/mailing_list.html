@@ -1,0 +1,38 @@
+{% extends 'mailing/base.html' %}
+{% block content %}
+  <div class="col-12 mb-5">
+    <a class="btn btn-outline-primary" href="{% url 'mailing:mailing_create' %}">Add Newsletter</a>
+  </div>
+  {% for object in object_list reversed %}
+  <div class="col-md-12">
+    <div class="card mb-4 box-shadow">
+      <div class="card-body">
+        <h4 class="card-text">
+          <b>{{ object.pk }}</b> - <b>Frequency:</b> {{ object.period }} | <b>Status:</b> {{ object.status }}
+            <span class="d-grid gap-2 d-md-flex justify-content-md-end">
+               <a href="{% url 'mailing:mailing_detail' object.pk %}"
+                  class="btn btn-sm btn-outline-secondary">Details</a>
+            </span>
+        </h4>
+
+            <table class="table table-striped">
+                <tr>
+                    <th>Customer-id</th>
+                    <th>Customer fullname</th>
+                </tr>
+                {% for customer_item in object.client.all %}
+                    <tr>
+                        <td> <a href="{% url 'mailing:client_detail' customer_item.pk %}"> {{ customer_item.pk }} </a> </td>
+                        <td> {{ customer_item.full_name }} </td>
+                    </tr>
+                {% endfor %}
+            </table>
+            <hr>
+            Message Subject: {{ object.title_message }}
+
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+
+  {% endblock%}

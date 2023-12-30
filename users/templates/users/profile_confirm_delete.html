@@ -1,4 +1,4 @@
-{% extends 'main/base.html' %}
+{% extends 'mailing/base.html' %}
 
 {% block content %}
 <div class="container">
@@ -12,7 +12,7 @@
                             {{ form.as_p }}
                             <p>Delete the Profile?</p>
                             <button type="submit" class="w-100 btn btn-sm btn-outline-danger">Confirm</button>
-                            <a href="{% url 'mailing:home' %}" class="w-100 btn btn-sm btn-outline-success">Back</a>
+                            <a href="{% url 'mailing:index' %}" class="w-100 btn btn-sm btn-outline-success">Back</a>
                         </form>
                     </div>
                 </div>

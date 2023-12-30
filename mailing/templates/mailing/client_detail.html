@@ -1,31 +1,31 @@
-{% extends 'main/base.html' %}
+{% extends 'mailing/base.html' %}
 
 {% block content %}
 <div class="col-12">
     <div class="row">
-        <div class="col-9">
+        <div class="col-12">
             <span class="d-grid gap-2 d-md-flex justify-content-md-end">
-                <a href="{% url 'main:customer_list'%}"
+                <a href="{% url 'mailing:client_list'%}"
                    class="btn btn-outline-primary">To Customer List
                 </a>
             </span>
             <div class="card">
                 <div class="card-header">
                     <h3>
-                        Fullname "{{ object.fio }}"
+                        Fullname "{{ object.full_name }}"
                     </h3>
                     <h4>Email: {{ object.email }}</h4>
                 </div>
                 <div class="card-body">
-                    <p>Comment:
+                    <p>Comment: <br>
                         {{ object.comment }}
                         <br>
                     </p>
                     <div class="d-flex justify-content-between align-items-center float-right">
                         <div class="btn-group">
-                          <a href="{% url 'main:edit_customer' object.pk %}"
+                          <a href="{% url 'mailing:client_update' object.pk %}"
                             class="btn btn-sm btn-outline-secondary">Edit</a>
-                          <a href="{% url 'main:delete_customer' object.pk %}"
+                          <a href="{% url 'mailing:client_delete' object.pk %}"
                             class="btn btn-sm btn-outline-danger">Delete</a>
                         </div>
                     </div>

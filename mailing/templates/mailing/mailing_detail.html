@@ -1,0 +1,48 @@
+{% extends 'mailing/base.html' %}
+
+{% block content %}
+<div class="col-12">
+    <div class="row">
+        <div class="col-12">
+            <span class="d-grid gap-2 d-md-flex justify-content-md-end">
+                <a href="{% url 'mailing:mailing_list'%}"
+                   class="btn btn-outline-primary">To Newsletter List
+                </a>
+            </span>
+            <div class="card">
+                <div class="card-header">
+                    <h3>
+                        Status "{{ object.status }}" | Frequency: {{ object.period }}
+                    </h3>
+                    <a> start time : {{ object.start_time }} </a> <br>
+                    <a> end time: {{ object.end_time }} </a>
+                </div>
+                <div class="card-body">
+                    <p>Customer:
+                        {% for customer_item in object.client.all %}
+                            <ul>
+                                <li> <a href="{% url 'mailing:client_detail' customer_item.pk %}"> {{ customer_item.full_name }} </a>
+                                </li>
+                            </ul>
+                        {% endfor %}
+                        <hr>
+                        Message Subject: {{ object.title_message }} <br>
+                        Message Body : {{ object.body_message }}
+                    </p>
+
+                </div>
+                <div class="card-footer">
+                     <div class="d-flex justify-content-between align-items-center float-right">
+                            <div class="btn-group">
+                              <a href="{% url 'mailing:mailing_update' object.pk %}"
+                                class="btn btn-sm btn-outline-secondary">Edit</a>
+                                <a href="{% url 'mailing:mailing_delete' object.pk %}"
+                                class="btn btn-sm btn-outline-danger">Delete</a>
+                            </div>
+                        </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+
+<table class="table table-striped">
+    <tr>
+        <th>ID</th>
+        <th>Frequency</th>
+        <th>Status</th>
+        <th>Message Subject</th>
+    </tr>
+    {#% for object in object_list %#}
+    {% for newsletter in object.mailing.all %}
+
+        <tr>
+            <td> <a href="{% url 'mailing:mailing_detail' object.pk %}"> {{ newsletter.pk }} </a> </td>
+            <td> {{ newsletter.period }} </td>
+            <td> {{ newsletter.status }} </td>
+            <td> {{ newsletter.title_message }} </td>
+        </tr>
+    {% endfor %}
+</table>

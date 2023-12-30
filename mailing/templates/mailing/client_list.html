@@ -1,7 +1,7 @@
-{% extends 'main/base.html' %}
+{% extends 'mailing/base.html' %}
 {% block content %}
   <div class="col-12 mb-5">
-    <a class="btn btn-outline-primary" href="{% url 'main:create_customer' %}">Add Customer</a>
+    <a class="btn btn-outline-primary" href="{% url 'mailing:client_create' %}">Add Customer</a>
   </div>
   {% for object in object_list reversed %}
   <div class="col-md-12">
@@ -9,17 +9,14 @@
       <div class="card-body">
         <h4 class="card-text">
           {{ object.pk }} -
-          Fullname: {{ object.fio }}
+          Fullname: {{ object.full_name }}
         </h4>
         <p class="card-text">
-          Email: {{ object.email}} <br>
-          Comment: {{ object.comment}}  <br>
-          Created on: {{ object.create_date}}  <br>
-          {{ object.owner }}
+          Email: {{ object.email}}
         </p>
         <div class="d-flex justify-content-between align-items-center float-right">
             <div class="btn-group">
-              <a href="{% url 'main:customer_view' object.pk %}"
+              <a href="{% url 'mailing:client_detail' object.pk %}"
                 class="btn btn-sm btn-outline-secondary">View</a>
           </div>
         </div>
