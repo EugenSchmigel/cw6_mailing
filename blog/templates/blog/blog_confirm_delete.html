@@ -1,23 +1,20 @@
-{% extends 'main/base.html' %}
+  {% extends 'main/base.html' %}
 
 {% block content %}
-<div class="container">
     <div class="col-12">
         <div class="row">
-            <div class="col-12">
+            <div class="col-6">
                 <div class="card">
                     <div class="card-body">
                         <form method="post">
                             {% csrf_token %}
-                            {{ form.as_p }}
-                            <p>Delete the post '{{object.title}}' ?</p>
-                            <button type="submit" class="btn btn-lg btn-block btn-outline-primary">Confirm</button>
-                            <a href="{% url 'blog:blog_list' %}" class="p-2 btn btn-outline-primary">Back</a>
+                            <p>Delete the blog "{{ object.title }}"?</p>
+                            <button type="submit" class="btn btn-danger">Confirm</button>
+                            <a href="{% url 'blog:blog_list' %}" class="btn btn-warning">Cancel</a>
                         </form>
                     </div>
                 </div>
             </div>
         </div>
     </div>
-</div>
 {% endblock %}

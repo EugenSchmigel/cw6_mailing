@@ -17,113 +17,60 @@ def send_order_email(obj: Newsletter):
             from_email=settings.EMAIL_HOST_USER,
             recipient_list=[*obj.client.all()],
             fail_silently=True)
-
-        logs = NewsletterLog.objects.create(  # запись в таблицу Logs об успешности выполнения
+        logs = NewsletterLog.objects.create( 
             mailing=obj,
             datetime_of_last_attempt=datetime.now(),
             status=True,
             error_msg='200 OK'
-
         )
     except Exception as e:
-
-        logs = NewsletterLog.objects.create(  # запись в таблицу Logs об ошибке
+        logs = NewsletterLog.objects.create(
             mailing=obj,
             datetime_of_last_attempt=datetime.now(),
             status=False,
             error_msg=str(e)
-
         )
 
 
 def time_task():
-    # получение текущей даты
     current_date = datetime.now().date()
-
-    # выборка из базы данных всех рассылок со статусом создана
     mailings_created = Newsletter.objects.filter(status='created')
 
-    # проверка пустой ли список или нет
     if mailings_created.exists():
-
         for mailing in mailings_created:
-            # проверка пришло ли время рассылки
             if mailing.start_time <= current_date <= mailing.end_time:
-
                 mailing.status = 'started'
                 mailing.save()
 
-    # выборка из базы данных всех рассылок со статусом запущено
     mailings_launched = Newsletter.objects.filter(status='started')
 
-    # проверка пустой ли список или нет
     if mailings_launched.exists():
-
         for mailing in mailings_launched:
-
-            # проверка находится ли текущая дата внутри промежутка времени между началом и концом рассылки
             if mailing.start_time <= current_date <= mailing.end_time:
-
-                # если до текущего момента уже был запуск рассылки
                 if mailing.last_run:
-
-                    # разница между текущей датой и последним запуском
                     differance = current_date - mailing.last_run
-
                     if mailing.period == 'daily':
-
-                        # если разница между текущей датой и последней датой запуска равна 1 дню
                         if differance.days == 1:
-
-                            # запуск рассылки
                             send_order_email(mailing)
-
-                            # установление новой даты последнего запуска
                             mailing.last_run = current_date
-
                             mailing.save()
-
                     elif mailing.period == 'weekly':
-
-                        # если разница между текущей датой и последней датой запуска равна 7 дням
                         if differance.days == 7:
-
-                            # запуск рассылки
                             send_order_email(mailing)
-
-                            # установление новой даты последнего запуска
                             mailing.last_run = current_date
-
                             mailing.save()
-
                     elif mailing.period == 'monthly':
-
-                        # если разница между текущей датой и последней датой запуска равна 30 дням
                         if differance.days == 30:
-
-                            # запуск рассылки
                             send_order_email(mailing)
-
-                            # установление новой даты последнего запуска
                             mailing.last_run = current_date
-
                             mailing.save()
-
-                # если рассылка ещё не запускалась
                 else:
-
-                    # запуск рассылки
-                    send_order_email(mailing)  # запуск рассылки
-
-                    # установление новой даты последнего запуска
+                    send_order_email(mailing)
                     mailing.last_run = current_date
                     mailing.save()
 
-            # если текущая дата больше чем конец рассылки
             elif current_date >= mailing.end_time:
-
                 mailing.status = 'done'
-
                 mailing.save()
 
 

@@ -121,23 +121,19 @@ class NewsletterUpdateView(LoginRequiredMixin, ChecksUser, UpdateView):
         return user_request
 
 
-class NewsletterLogListView(ListView):
+class NewsletterLogsListView(ListView):
     model = NewsletterLog
-    template_name = 'main/newsletter_report.html'
-
-
-def contacts(request):
-    return render(request, 'main/contacts.html')
+    template_name = 'main/newsletter_logs.html'
 
 
 class HomePageView(TemplateView):
-    template_name = 'main/home.html'
+    template_name = 'main/index.html'
 
     def get_context_data(self, **kwargs):
-        blog = Blog.objects.all()[:3]  # выборка из базы данных 3 случайных записи Blog
-        customers_count = len(Customer.objects.all())  # подсчёт кол-во клиентов
-        newsletter_count = len(Newsletter.objects.all())  # подсчёт кол-во рассылок
-        newsletter_active = len(Newsletter.objects.filter(status='started'))  # подсчёт кол-во активных рассылок
+        blog = Blog.objects.all()[:3]
+        customers_count = len(Customer.objects.all())
+        newsletter_count = len(Newsletter.objects.all())
+        newsletter_active = len(Newsletter.objects.filter(status='started'))
         context = super().get_context_data()
         context['newsletter_count'] = newsletter_count
         context['newsletter_active'] = newsletter_active
@@ -149,12 +145,10 @@ class HomePageView(TemplateView):
 
 @permission_required('newsletter.deactivate_newsletter')
 def off(request, pk):
-    """Контролер для отключения рассылок"""
-
     obj = Newsletter.objects.get(pk=pk)
-
     if obj.status == 'created' or 'started':
         obj.status = 'done'
         obj.save()
-
     return redirect(reverse('main:newsletter_list'))
+
+

@@ -54,6 +54,13 @@ class Newsletter(models.Model):
         verbose_name = 'рассылка'
         verbose_name_plural = 'рассылки'
 
+    permissions = [
+        (
+            'deactivate_mailing',
+            'Can deactivate settings'
+        )
+    ]
+
 
 class NewsletterLog(models.Model):
 
@@ -61,12 +68,14 @@ class NewsletterLog(models.Model):
         ('successful', 'Успешно'),
         ('failed', 'Запущена')
     ]
+    STATUS_OK = 'ok'
+    STATUS_FAILED = 'failed'
 
-    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, **NULLABLE, verbose_name='рассылка')
-    status = models.CharField(max_length=50, choices=STATUS, verbose_name='статус попытки')
-    mail_server_response = models.TextField(**NULLABLE, verbose_name='ответ почтового сервера')
-    create_date = models.DateTimeField(**NULLABLE, auto_now_add=True, verbose_name='дата создания')
-    datetime_of_last_attempt = models.DateTimeField(verbose_name='дата и время последней попытки')
+    newsletter = models.ForeignKey(Newsletter, on_delete=models.CASCADE, **NULLABLE, verbose_name='newsletter')
+    status = models.CharField(max_length=50, choices=STATUS, verbose_name='status attempts')
+    mail_server_response = models.TextField(**NULLABLE, verbose_name='mail server response')
+    create_date = models.DateTimeField(**NULLABLE, auto_now_add=True, verbose_name='create date')
+    datetime_of_last_attempt = models.DateTimeField(verbose_name='datetime last attempt')
 
     def __str__(self):
         return f'{self.newsletter}, {self.mail_server_response}, {self.status}'
