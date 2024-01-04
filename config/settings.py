@@ -161,19 +161,19 @@ if CACHE_ENABLED:
         }
     }
 
-# CRONJOBS = [
-#     ('* * * * *', 'mailing.services.time_task'),  # Ежеминутная
-#     ('0 10 * * *', 'mailing.services.time_task', ['daily']),  # Ежедневная
-#     ('0 10 * * 1', 'mailing.services.time_task', ['weekly']),  # Еженедельная
-#     ('0 10 1 * *', 'mailing.services.time_task', ['monthly']),  # Ежемесячная
-# ]
+CRONJOBS = [
+    ('* * * * *', 'mailing.services.time_task'),  # every minute
+    ('0 10 * * *', 'mailing.services.time_task', ['daily']),  # daily
+    ('0 10 * * 1', 'mailing.services.time_task', ['weekly']),  # weekly
+    ('0 10 1 * *', 'mailing.services.time_task', ['monthly']),  # monthly
+]
 
-# CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
-#
-# if CACHE_ENABLED:
-#     CACHES = {
-#         "default": {
-#             "BACKEND": "django.core.cache.backends.redis.RedisCache",
-#             "LOCATION": os.getenv('CACHES_LOCATION'),
-#         }
-#     }
+CACHE_ENABLED = os.getenv('CACHE_ENABLED') == 'True'
+
+if CACHE_ENABLED:
+    CACHES = {
+        "default": {
+            "BACKEND": "django.core.cache.backends.redis.RedisCache",
+            "LOCATION": os.getenv('CACHES_LOCATION'),
+        }
+    }
